@@ -6,6 +6,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [1.0.0] - 2020-12-31
 ### Added
 - "Show # of Files" command
 - Include/Exclude configuration options
