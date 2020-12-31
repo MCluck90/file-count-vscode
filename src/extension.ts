@@ -7,7 +7,7 @@ interface Config {
   useGitignore: boolean
 }
 
-const intersection = <T>(a: Set<T>, b: Set<T>): Set<T> => {
+export const intersection = <T>(a: Set<T>, b: Set<T>): Set<T> => {
   const results = new Set<T>()
   for (const value of a) {
     if (b.has(value)) {

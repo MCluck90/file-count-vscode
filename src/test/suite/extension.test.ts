@@ -1,15 +1,17 @@
 import * as assert from 'assert'
-
-// You can import and use all API from the 'vscode' module
-// as well as import your extension to test it
 import * as vscode from 'vscode'
-// import * as myExtension from '../../extension';
+import { intersection } from '../../extension'
 
 suite('Extension Test Suite', () => {
   vscode.window.showInformationMessage('Start all tests.')
 
-  test('Sample test', () => {
-    assert.strictEqual(-1, [1, 2, 3].indexOf(5))
-    assert.strictEqual(-1, [1, 2, 3].indexOf(0))
+  test('Set intersection only includes items in both sets', () => {
+    const setA = new Set([1, 2, 3, 4, 5])
+    const setB = new Set([3, 4, 5, 6, 7])
+    const setC = intersection(setA, setB)
+    assert.strictEqual(setC.size, 3)
+    assert.ok(setC.has(3))
+    assert.ok(setC.has(4))
+    assert.ok(setC.has(5))
   })
 })
