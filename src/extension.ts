@@ -71,6 +71,20 @@ const countFiles = async (): Promise<number> => {
   return getNumOfFiles(include, exclude)
 }
 
+const getCustomCount = async (): Promise<number> => {
+  const include =
+    (await vscode.window.showInputBox({
+      prompt: 'Glob(s) of files to include',
+      placeHolder: '**',
+    })) || '**'
+  const exclude =
+    (await vscode.window.showInputBox({
+      prompt: 'Glob(s) of files to exclude',
+      placeHolder: '',
+    })) || ''
+  return getNumOfFiles(include.split(','), exclude.split(','))
+}
+
 export function activate(context: vscode.ExtensionContext): void {
   context.subscriptions.push(
     vscode.commands.registerCommand('file-count.showNumOfFiles', async () => {
@@ -80,24 +94,35 @@ export function activate(context: vscode.ExtensionContext): void {
   )
 
   context.subscriptions.push(
+    vscode.commands.registerTextEditorCommand(
+      'file-count.insertNumOfFiles',
+      async (textEditor) => {
+        const count = await countFiles()
+        textEditor.edit((edit) => {
+          edit.insert(textEditor.selection.start, count.toString())
+        })
+      }
+    )
+  )
+
+  context.subscriptions.push(
     vscode.commands.registerCommand(
       'file-count.showNumOfFilesCustom',
       async () => {
-        const include =
-          (await vscode.window.showInputBox({
-            prompt: 'Glob(s) of files to include',
-            placeHolder: '**',
-          })) || ''
-        const exclude =
-          (await vscode.window.showInputBox({
-            prompt: 'Glob(s) of files to exclude',
-            placeHolder: '',
-          })) || ''
-        const count = await getNumOfFiles(
-          include.split(','),
-          exclude.split(',')
-        )
+        const count = await getCustomCount()
         vscode.window.showInformationMessage(`File Count: ${count.toString()}`)
+      }
+    )
+  )
+
+  context.subscriptions.push(
+    vscode.commands.registerTextEditorCommand(
+      'file-count.insertNumOfFilesCustom',
+      async (textEditor) => {
+        const count = await getCustomCount()
+        textEditor.edit((edit) => {
+          edit.insert(textEditor.selection.start, count.toString())
+        })
       }
     )
   )

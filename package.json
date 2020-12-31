@@ -11,7 +11,9 @@
   ],
   "activationEvents": [
     "onCommand:file-count.showNumOfFiles",
-    "onCommand:file-count.showNumOfFilesCustom"
+    "onCommand:file-count.showNumOfFilesCustom",
+    "onCommand:file-count.insertNumOfFiles",
+    "onCommand:file-count.insertNumOfFilesCustom"
   ],
   "main": "./out/extension.js",
   "scripts": {
@@ -33,6 +35,14 @@
       {
         "command": "file-count.showNumOfFilesCustom",
         "title": "File Count: Show # of Files (Custom)"
+      },
+      {
+        "command": "file-count.insertNumOfFiles",
+        "title": "File Count: Insert # of Files"
+      },
+      {
+        "command": "file-count.insertNumOfFilesCustom",
+        "title": "File Count: Insert # of Files (Custom)"
       }
     ],
     "configuration": [

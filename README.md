@@ -12,7 +12,13 @@ Count the number of files in the workspace.
 Open the Command Palette and run one of the following commands:
 
 - `File Count: Show # of Files`
+  - Shows the number of files that match based on the [extension settings][#extension-settings]
 - `File Count: Show # of Files (Custom)`
+  - Shows the number of files that match the provided globs
+- `File Count: Insert # of Files`
+  - Insert the number of files in to the document that match based on the [extension settings][#extension-settings]
+- `File Count: Insert # of Files (Custom)`
+  - Insert the number of files in to the document that match the provided globs
 
 ## Extension Settings
 
