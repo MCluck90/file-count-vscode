@@ -1,8 +1,10 @@
 import * as vscode from 'vscode'
+import * as fs from 'fs'
 
 interface Config {
   include: string
   exclude: string
+  useGitignore: boolean
 }
 
 const intersection = <T>(a: Set<T>, b: Set<T>): Set<T> => {
@@ -15,14 +17,22 @@ const intersection = <T>(a: Set<T>, b: Set<T>): Set<T> => {
   return results
 }
 
-const countFiles = async (
-  include: string,
-  exclude: string
+const getGitignoreFiles = async (): Promise<string[]> => {
+  const files = await vscode.workspace.findFiles('.gitignore')
+  if (files.length !== 1) {
+    return []
+  }
+
+  const contents = fs.readFileSync(files[0].fsPath).toString()
+  return contents.split(/\r?\n/g)
+}
+
+const getNumOfFiles = async (
+  includePatterns: string[],
+  excludePatterns: string[]
 ): Promise<number> => {
   let first = true
   let results = new Set<string>()
-  const includePatterns = include.split(',')
-  const excludePatterns = exclude.split(',')
   for (const include of includePatterns) {
     for (const exclude of excludePatterns) {
       const res = await (
@@ -44,17 +54,28 @@ const countFiles = async (
 const getConfig = (): Config => {
   const config = vscode.workspace.getConfiguration('file-count')
   return {
-    include: config.get('include') || '**',
-    exclude: config.get('exclude') || 'node_modules/',
+    include: config.get('include', '**'),
+    exclude: config.get('exclude', ''),
+    useGitignore: config.get('useGitignore', true),
   }
+}
+
+const countFiles = async (): Promise<number> => {
+  const config = getConfig()
+  let gitignoredFiles: string[] = []
+  if (config.useGitignore) {
+    gitignoredFiles = await getGitignoreFiles()
+  }
+  const include = config.include.split(',')
+  const exclude = config.exclude.split(',').concat(gitignoredFiles)
+  return getNumOfFiles(include, exclude)
 }
 
 export function activate(context: vscode.ExtensionContext): void {
   const disposable = vscode.commands.registerCommand(
     'file-count.showNumOfFiles',
     async () => {
-      const config = getConfig()
-      const count = await countFiles(config.include, config.exclude)
+      const count = await countFiles()
       vscode.window.showInformationMessage(count.toString())
     }
   )

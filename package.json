@@ -42,7 +42,12 @@
           "file-count.exclude": {
             "description": "Glob pattern(s) of files to exclude",
             "type": "string",
-            "default": "node_modules/"
+            "default": ""
+          },
+          "file-count.useGitignore": {
+            "description": "Use .gitignore to exclude files",
+            "type": "boolean",
+            "default": true
           }
         }
       }
