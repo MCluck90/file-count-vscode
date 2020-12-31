@@ -10,7 +10,8 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:file-count.showNumOfFiles"
+    "onCommand:file-count.showNumOfFiles",
+    "onCommand:file-count.showNumOfFilesCustom"
   ],
   "main": "./out/extension.js",
   "scripts": {
@@ -28,6 +29,10 @@
       {
         "command": "file-count.showNumOfFiles",
         "title": "File Count: Show # of Files"
+      },
+      {
+        "command": "file-count.showNumOfFilesCustom",
+        "title": "File Count: Show # of Files (Custom)"
       }
     ],
     "configuration": [

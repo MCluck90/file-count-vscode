@@ -72,15 +72,35 @@ const countFiles = async (): Promise<number> => {
 }
 
 export function activate(context: vscode.ExtensionContext): void {
-  const disposable = vscode.commands.registerCommand(
-    'file-count.showNumOfFiles',
-    async () => {
+  context.subscriptions.push(
+    vscode.commands.registerCommand('file-count.showNumOfFiles', async () => {
       const count = await countFiles()
       vscode.window.showInformationMessage(`File Count: ${count.toString()}`)
-    }
+    })
   )
 
-  context.subscriptions.push(disposable)
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      'file-count.showNumOfFilesCustom',
+      async () => {
+        const include =
+          (await vscode.window.showInputBox({
+            prompt: 'Glob(s) of files to include',
+            placeHolder: '**',
+          })) || ''
+        const exclude =
+          (await vscode.window.showInputBox({
+            prompt: 'Glob(s) of files to exclude',
+            placeHolder: '',
+          })) || ''
+        const count = await getNumOfFiles(
+          include.split(','),
+          exclude.split(',')
+        )
+        vscode.window.showInformationMessage(`File Count: ${count.toString()}`)
+      }
+    )
+  )
 }
 
 export function deactivate(): void {}

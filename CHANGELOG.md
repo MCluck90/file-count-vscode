@@ -10,3 +10,4 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - "Show # of Files" command
 - Include/Exclude configuration options
 - Option to use .gitignore for excluding files
+- "Show # of Files (Custom)" command
