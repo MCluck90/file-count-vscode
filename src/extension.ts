@@ -76,7 +76,7 @@ export function activate(context: vscode.ExtensionContext): void {
     'file-count.showNumOfFiles',
     async () => {
       const count = await countFiles()
-      vscode.window.showInformationMessage(count.toString())
+      vscode.window.showInformationMessage(`File Count: ${count.toString()}`)
     }
   )
 
