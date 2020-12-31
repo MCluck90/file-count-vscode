@@ -10,17 +10,9 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:file-count.helloWorld"
+    "onCommand:file-count.showNumOfFiles"
   ],
   "main": "./out/extension.js",
-  "contributes": {
-    "commands": [
-      {
-        "command": "file-count.helloWorld",
-        "title": "Hello World"
-      }
-    ]
-  },
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
@@ -28,7 +20,33 @@
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
     "test": "node ./out/test/runTest.js",
-    "format": "prettier --write src/**"
+    "format": "prettier --write src/** *.{js,json}",
+    "commit": "commit"
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "file-count.showNumOfFiles",
+        "title": "File Count: Show # of Files"
+      }
+    ],
+    "configuration": [
+      {
+        "title": "File Count",
+        "properties": {
+          "file-count.include": {
+            "description": "Glob pattern(s) of files to include",
+            "type": "string",
+            "default": "**"
+          },
+          "file-count.exclude": {
+            "description": "Glob pattern(s) of files to exclude",
+            "type": "string",
+            "default": "node_modules/"
+          }
+        }
+      }
+    ]
   },
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",
