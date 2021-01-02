@@ -13,7 +13,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - Option to use .gitignore for excluding files
 - "Show # of Files (Custom)" command
 
-## [1.1.0] - 2021-01-02
+## [1.2.0] - 2021-01-02
 ### Added
 - Loading notification
 
