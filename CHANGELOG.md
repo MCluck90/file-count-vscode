@@ -12,3 +12,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - Include/Exclude configuration options
 - Option to use .gitignore for excluding files
 - "Show # of Files (Custom)" command
+
+## [1.1.0] - 2021-01-02
+### Added
+- Loading notification
+
+### Improved
+- Performance by joining globs together

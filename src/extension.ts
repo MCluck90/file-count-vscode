@@ -44,7 +44,10 @@ const getNumOfFiles = async (
     includePatterns.length > 1
       ? `{${includePatterns.join(',')}}`
       : includePatterns[0]
-  const exclude = `{${excludePatterns.join(',')}}`
+  const exclude =
+    excludePatterns.length > 1
+      ? `{${excludePatterns.join(',')}}`
+      : excludePatterns[0]
   return (await vscode.workspace.findFiles(include, exclude)).length
 }
 
