@@ -24,31 +24,28 @@ const getGitignoreFiles = async (): Promise<string[]> => {
   }
 
   const contents = fs.readFileSync(files[0].fsPath).toString()
-  return contents.split(/\r?\n/g)
+  return contents
+    .split(/\r?\n/g)
+    .map((line) => {
+      line = line.replace(/#.*/, '').trim()
+      if (line[0] === '/') {
+        return line.substring(1)
+      }
+      return line
+    })
+    .filter((line) => line.length)
 }
 
 const getNumOfFiles = async (
   includePatterns: string[],
   excludePatterns: string[]
 ): Promise<number> => {
-  let first = true
-  let results = new Set<string>()
-  for (const include of includePatterns) {
-    for (const exclude of excludePatterns) {
-      const res = await (
-        await vscode.workspace.findFiles(include, exclude)
-      ).map((uri) => uri.fsPath)
-
-      if (first) {
-        results = new Set(res)
-        first = false
-        continue
-      }
-
-      results = intersection(results, new Set(res))
-    }
-  }
-  return results.size
+  const include =
+    includePatterns.length > 1
+      ? `{${includePatterns.join(',')}}`
+      : includePatterns[0]
+  const exclude = `{${excludePatterns.join(',')}}`
+  return (await vscode.workspace.findFiles(include, exclude)).length
 }
 
 const getConfig = (): Config => {
@@ -67,7 +64,10 @@ const countFiles = async (): Promise<number> => {
     gitignoredFiles = await getGitignoreFiles()
   }
   const include = config.include.split(',')
-  const exclude = config.exclude.split(',').concat(gitignoredFiles)
+  const exclude = config.exclude
+    .split(',')
+    .concat(gitignoredFiles)
+    .filter((line) => line.length)
   return getNumOfFiles(include, exclude)
 }
 
