@@ -3,7 +3,7 @@
   "displayName": "File Count",
   "description": "Count the number of files in the workspace",
   "publisher": "MikeCluck",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "engines": {
     "vscode": "^1.52.0"
   },
