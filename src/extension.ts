@@ -75,20 +75,30 @@ const getCustomCount = async (): Promise<number> => {
   const include =
     (await vscode.window.showInputBox({
       prompt: 'Glob(s) of files to include',
-      placeHolder: '**',
+      value: '**',
     })) || '**'
   const exclude =
     (await vscode.window.showInputBox({
       prompt: 'Glob(s) of files to exclude',
-      placeHolder: '',
+      value: '',
     })) || ''
   return getNumOfFiles(include.split(','), exclude.split(','))
 }
 
+const reportCounting = (countFn: () => Thenable<number>): Thenable<number> =>
+  vscode.window.withProgress(
+    {
+      location: vscode.ProgressLocation.Notification,
+      title: 'Counting files...',
+      cancellable: true,
+    },
+    countFn
+  )
+
 export function activate(context: vscode.ExtensionContext): void {
   context.subscriptions.push(
     vscode.commands.registerCommand('file-count.showNumOfFiles', async () => {
-      const count = await countFiles()
+      const count = await reportCounting(countFiles)
       vscode.window.showInformationMessage(`File Count: ${count.toString()}`)
     })
   )
@@ -97,7 +107,7 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerTextEditorCommand(
       'file-count.insertNumOfFiles',
       async (textEditor) => {
-        const count = await countFiles()
+        const count = await reportCounting(countFiles)
         textEditor.edit((edit) => {
           edit.insert(textEditor.selection.start, count.toString())
         })
@@ -109,7 +119,7 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand(
       'file-count.showNumOfFilesCustom',
       async () => {
-        const count = await getCustomCount()
+        const count = await reportCounting(getCustomCount)
         vscode.window.showInformationMessage(`File Count: ${count.toString()}`)
       }
     )
@@ -119,7 +129,7 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerTextEditorCommand(
       'file-count.insertNumOfFilesCustom',
       async (textEditor) => {
-        const count = await getCustomCount()
+        const count = await reportCounting(getCustomCount)
         textEditor.edit((edit) => {
           edit.insert(textEditor.selection.start, count.toString())
         })
